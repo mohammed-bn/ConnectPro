@@ -12,7 +12,7 @@ class ProfessionnelController extends Controller
      */
     public function index()
     {
-        //
+        return view(profil.professionel);
     }
 
     /**
@@ -20,15 +20,24 @@ class ProfessionnelController extends Controller
      */
     public function create()
     {
-        //
+        return view("hena");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $userId)
     {
-        //
+        $request->validate([
+            'category' => 'required|string|max:255',
+            'bio'      => 'required|string|max:550',
+        ]);
+
+        $user = User::create([
+            'category' => $request->category,
+            'bio'      => $request->bio,
+            'user_id' => $userId,
+        ]);
     }
 
     /**

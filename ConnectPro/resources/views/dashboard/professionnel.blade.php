@@ -19,7 +19,7 @@
                 <p class="text-gray-600 dark:text-gray-300 text-sm">
                     Professionnel
                 </p>
-                <a href="#"
+                <a href="{{route('profile.profile')}}"
                    class="mt-2 px-3 py-1 bg-[#569BAB] text-white rounded-full text-sm hover:bg-[#305F70] transition">
                     Voir profil
                 </a>

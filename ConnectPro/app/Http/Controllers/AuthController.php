@@ -55,9 +55,6 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        // Logique pour envoyer le lien de réinitialisation de mot de passe
-        // (ex: générer un token, stocker dans la base, envoyer email)
-
         return back()->with('status', 'Lien de réinitialisation envoyé à votre adresse email.');
     }
 

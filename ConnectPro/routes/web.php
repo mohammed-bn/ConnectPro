@@ -63,37 +63,11 @@ Route::get('/client-dashboard', function () {
     return view('dashboard.user');
 })->name('client-dashboard');
 
-// Route::get('/client-professional', function () {
-//     return view('dashboard.professionnel');
-// })->name('client-professionnel');
-
-
-
-
-Route::get('/dashboard-professional-test', function () {
-    // Fake posts data
-    $posts = collect([
-        (object)[
-            'user' => (object)['name' => 'Dr. Mohamed', 'photo' => 'https://cdn-icons-png.flaticon.com/512/1077/1077063.png'],
-            'content' => 'Je propose un service de consultation médicale à domicile.',
-            'image' => null,
-            'created_at' => now(),
-            'category' => 'Médecine',
-            'speciality' => 'Généraliste'   
-        ],
-        (object)[
-            'user' => (object)['name' => 'Mme. Sara', 'photo' => null],
-            'content' => 'Nouvelle spécialité en nutrition disponible !',
-            'image' => 'https://via.placeholder.com/400x200',
-            'created_at' => now(),
-            'category' => 'Nutrition',
-            'speciality' => 'Diététicienne'
-        ]
-    ]);
-
-    return view('dashboard.professionnel', compact('posts'));
-});
 
 Route::post('/choose-account', [ChooseAccountController::class, 'store']);
 
+
+Route::get('/profile_ Professionnel',[ProfileController::class, 'index'])->name('profile.profile');
+
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 

@@ -1,132 +1,176 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Pro Max')
 
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 p-6">
+<style>
+/* ❌ Hide scrollbar but keep scroll functional */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
 
-    <!-- HEADER SEARCH -->
-    <div class="max-w-5xl mx-auto mb-8">
+<div class="h-screen bg-gray-100 dark:bg-slate-900 overflow-hidden">
 
-        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg shadow-xl rounded-2xl p-4">
+    <!-- NAVBAR -->
+    <div class="h-[80px] sticky top-0 z-40 bg-white dark:bg-slate-800 shadow flex items-center justify-between px-6 py-3">
 
-            <!-- SEARCH BAR -->
-            <div class="flex items-center gap-3">
+        <!-- SEARCH -->
+        <div class="w-1/2 flex gap-2">
+            <input type="text"
+                   placeholder="🔍 Rechercher un professionnel..."
+                   id="searchInput"
+                   class="w-full p-2 rounded-lg bg-gray-100 dark:bg-slate-700 outline-none focus:ring-2 focus:ring-blue-500">
 
-                <input type="text"
-                       placeholder="🔍 Rechercher un professionnel, service..."
-                       class="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-700 outline-none focus:ring-2 focus:ring-[#569BAB] transition">
-
-                <!-- TOGGLE FILTER -->
-                <button onclick="toggleFilters()"
-                        class="bg-[#569BAB] text-white px-4 py-3 rounded-xl hover:bg-[#305F70] transition">
-                    ⚙️
-                </button>
-
-            </div>
-
-            <!-- COLLAPS FILTER -->
-            <div id="filters"
-                 class="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out mt-4">
-
-                <div class="grid md:grid-cols-3 gap-4 pt-4">
-
-                    <select class="p-3 rounded-xl bg-gray-100 dark:bg-gray-700">
-                        <option>Catégorie</option>
-                        <option>Médecin</option>
-                        <option>Avocat</option>
-                        <option>Développeur</option>
-                    </select>
-
-                    <select class="p-3 rounded-xl bg-gray-100 dark:bg-gray-700">
-                        <option>Spécialité</option>
-                        <option>Cardiologie</option>
-                        <option>Droit</option>
-                    </select>
-
-                    <input type="text" placeholder="📍 Localisation"
-                           class="p-3 rounded-xl bg-gray-100 dark:bg-gray-700">
-
-                </div>
-
-                <div class="mt-4 text-right">
-                    <button class="bg-[#305F70] text-white px-6 py-2 rounded-xl hover:bg-[#569BAB] transition">
-                        Appliquer
-                    </button>
-                </div>
-
-            </div>
-
+            <button onclick="toggleFilters()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+                ⚙️ Filtrer
+            </button>
         </div>
 
+        <!-- ACTIONS -->
+        <div class="flex items-center gap-6 text-xl text-slate-600 dark:text-gray-300">
+            <button>🔔</button>
+            <button>💬</button>
+            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png"
+                 class="w-10 h-10 rounded-full border-2 border-blue-500">
+        </div>
     </div>
 
-    <!-- FEED -->
-    <div class="max-w-5xl mx-auto space-y-6">
+    <!-- FILTERS -->
+    <div id="filters" class="max-w-7xl mx-auto px-6 mt-4 hidden transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow p-4 grid md:grid-cols-4 gap-4">
 
-        @for ($i = 0; $i < 5; $i++)
+            <select id="filterCategory" class="p-2 rounded-lg bg-gray-100 dark:bg-slate-700">
+                <option value="">Catégorie</option>
+                <option>Médecin</option>
+                <option>Avocat</option>
+                <option>Développeur</option>
+            </select>
 
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 p-6">
+            <select id="filterSpeciality" class="p-2 rounded-lg bg-gray-100 dark:bg-slate-700">
+                <option value="">Spécialité</option>
+                <option>Cardiologie</option>
+                <option>Droit</option>
+            </select>
 
-            <!-- HEADER -->
-            <div class="flex items-center gap-4 mb-4">
+            <input type="text" id="filterCity" placeholder="Ville"
+                   class="p-2 rounded-lg bg-gray-100 dark:bg-slate-700">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                     class="w-14 h-14 rounded-full border-2 border-[#569BAB]">
+            <input type="text" id="filterRegion" placeholder="Région"
+                   class="p-2 rounded-lg bg-gray-100 dark:bg-slate-700">
 
-                <div>
-                    <h3 class="font-bold text-lg text-[#305F70]">
-                        Dr. Ahmed Benali
-                    </h3>
-                    <p class="text-sm text-gray-500">
-                        Cardiologue • Marrakech
-                    </p>
+            <button onclick="applyFilters()" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition col-span-4">
+                Appliquer
+            </button>
+        </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-6 px-6 pt-6">
+
+        <!-- LEFT -->
+        <aside class="hidden md:flex flex-col gap-6">
+
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow p-4 text-center">
+                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png"
+                     class="w-20 h-20 rounded-full mx-auto mb-3 border-4 border-blue-500">
+
+                <h2 class="font-bold text-slate-800 dark:text-white">Nom User</h2>
+
+                <a href="#"
+                   class="mt-3 inline-block bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+                    Voir Profil
+                </a>
+            </div>
+
+        </aside>
+
+        <!-- FEED -->
+        <main class="md:col-span-2 space-y-6 overflow-y-auto h-[calc(100vh-80px)] pr-2 no-scrollbar">
+
+            <!-- CREATE POST -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow p-4">
+                <textarea placeholder="Partager une idée..."
+                          class="w-full p-3 rounded-lg bg-gray-100 dark:bg-slate-700 mb-3"></textarea>
+
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">📷 Photo • 🎥 Vidéo</span>
+
+                    <button class="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition">
+                        Publier
+                    </button>
+                </div>
+            </div>
+
+            <!-- POSTS -->
+            @for ($i = 0; $i < 10; $i++)
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                         class="w-12 h-12 rounded-full">
+                    <div>
+                        <h3 class="font-bold text-slate-800 dark:text-white">Dr. Ahmed</h3>
+                        <p class="text-sm text-gray-500">Casablanca • 2h</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-600 dark:text-gray-300 mb-3">
+                    Consultation disponible cette semaine.
+                </p>
+
+                <div class="flex justify-between text-sm border-t pt-3 text-gray-500">
+                    <button class="hover:text-blue-500">👍 Like</button>
+                    <button onclick="toggleComment({{ $i }})" class="hover:text-blue-500">💬 Comment</button>
+                    <button class="hover:text-blue-500">📤 Share</button>
+                </div>
+
+                <div id="comment-{{ $i }}" class="hidden mt-3">
+                    <input type="text"
+                           placeholder="Commenter..."
+                           class="w-full p-2 rounded bg-gray-100 dark:bg-slate-700">
+                </div>
+            </div>
+            @endfor
+
+        </main>
+
+        <!-- RIGHT -->
+        <aside class="hidden md:flex flex-col gap-6">
+
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow p-4">
+                <h3 class="font-bold mb-3 text-slate-800 dark:text-white">Suggestions</h3>
+
+                <div class="flex justify-between mb-2">
+                    <span>Dr. Sara</span>
+                    <button class="text-blue-500">Suivre</button>
                 </div>
 
             </div>
 
-            <!-- CONTENT -->
-            <p class="text-gray-600 dark:text-gray-300 mb-5 leading-relaxed">
-                Spécialiste avec plus de 10 ans d'expérience. Consultation rapide,
-                diagnostic précis et suivi personnalisé.
-            </p>
-
-            <!-- ACTIONS -->
-            <div class="flex gap-3">
-
-                <a href="#"
-                   class="px-4 py-2 bg-[#569BAB] text-white rounded-xl hover:bg-[#305F70] transition">
-                    Voir profil
-                </a>
-
-                <button
-                    class="px-4 py-2 border border-[#569BAB] text-[#569BAB] rounded-xl hover:bg-[#569BAB] hover:text-white transition">
-                    Contacter
-                </button>
-
-            </div>
-
-        </div>
-
-        @endfor
+        </aside>
 
     </div>
 
 </div>
 
-<!-- SCRIPT -->
 <script>
+function toggleComment(id) {
+    document.getElementById('comment-' + id).classList.toggle('hidden');
+}
+
 function toggleFilters() {
     const el = document.getElementById('filters');
+    el.classList.toggle('hidden');
+}
 
-    if (el.classList.contains('max-h-0')) {
-        el.classList.remove('max-h-0', 'opacity-0');
-        el.classList.add('max-h-[500px]', 'opacity-100');
-    } else {
-        el.classList.add('max-h-0', 'opacity-0');
-        el.classList.remove('max-h-[500px]', 'opacity-100');
-    }
+function applyFilters() {
+    const category = document.getElementById('filterCategory').value;
+    const speciality = document.getElementById('filterSpeciality').value;
+    const city = document.getElementById('filterCity').value;
+    const region = document.getElementById('filterRegion').value;
+
+    alert(`Filtres appliqués:\nCatégorie: ${category}\nSpécialité: ${speciality}\nVille: ${city}\nRégion: ${region}`);
 }
 </script>
 
