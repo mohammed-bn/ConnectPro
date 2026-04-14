@@ -19,9 +19,10 @@
             </div>
         @endif
 
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form method="POST" action="{{route('profile.update') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT') 
+            
 
             <!-- PHOTO -->
             <div class="flex items-center gap-6">
@@ -50,12 +51,60 @@
                 <!-- PHONE -->
                 <div>
                     <label class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                        Nom
+                    </label>
+                    <input type="text" name="name" value="{{ old('name', $user->name) }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-xl p-3
+                               focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:text-white">
+                    @error('name')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">
                         Téléphone
                     </label>
                     <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
                         class="w-full border border-gray-300 dark:border-gray-600 rounded-xl p-3
                                focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:text-white">
                     @error('phone')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                        Région
+                    </label>
+                    <input type="text" name="phone" value="{{ old('region', $user->region) }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-xl p-3
+                               focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:text-white">
+                    @error('region')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                        Ville
+                    </label>
+                    <input type="text" name="city" value="{{ old('city', $user->city) }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-xl p-3
+                               focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:text-white">
+                    @error('city')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700 dark:text-gray-300">
+                        Adresse
+                    </label>
+                    <input type="text" name="address" value="{{ old('address', $user->address) }}"
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-xl p-3
+                               focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:text-white">
+                    @error('address')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

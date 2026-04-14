@@ -20,7 +20,7 @@
                 <p class="text-gray-500 dark:text-gray-300">{{ $user->speciality ?? 'Spécialité non définie' }}</p>
                 <p class="text-gray-500 dark:text-gray-300">{{ $user->city ?? 'Ville non définie' }}</p>
 
-                <a href="{{ route('profile.update') }}"
+                <a href="{{ route('profile.edit') }}"
                    class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
                     Modifier Profil
                 </a>

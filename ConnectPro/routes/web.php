@@ -45,29 +45,34 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
+
 Route::middleware('auth')->group(function () {
 
 
     Route::get('/choose-account', [ChooseAccountController::class, 'index'])->name('choose-account');
-    Route::post('/choose-account/store', [ChooseAccountController::class, 'store'])->name('choose-account.store');
-    Route::post('/client-dashboard', [ChooseAccountController::class, 'dash'])->name('client-dashboard'); // ✅ fix
-
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::post('/client-dashboard', [ChooseAccountController::class, 'dash'])->name('client-dashboard'); 
+    Route::get('/profile_Professionnel',[ProfileController::class, 'index'])->name('profile.profile');
+    Route::post('/profile_Professionnel/store', [ChooseAccountController::class, 'store'])->name('choose-account.store');
 
 });
 
-Route::get('/client-dashboard', function () {
-    return view('dashboard.user');
-})->name('client-dashboard');
 
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
-Route::post('/choose-account', [ChooseAccountController::class, 'store']);
-
-
-Route::get('/profile_ Professionnel',[ProfileController::class, 'index'])->name('profile.profile');
-
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+
+
+
+// Route::post('/client_dashboard', [ChooseAccountController::class, 'store']);
+
+
+
+
+
+
+
+
+
 

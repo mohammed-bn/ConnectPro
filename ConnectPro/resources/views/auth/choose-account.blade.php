@@ -23,7 +23,7 @@
         <div class="grid md:grid-cols-2 gap-8">
 
             <!-- PROFESSIONNEL -->
-            <form method="POST" action="{{ route('choose-account') }}">
+            <form method="POST" action="{{ route('choose-account.store') }}">
                 @csrf
                 <input type="hidden" name="account_type" value="professional">
 
