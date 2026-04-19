@@ -7,18 +7,21 @@ class Professionnel extends Model
 {
     protected $fillable = [
         'user_id',
-  
         'category',
-        'spesialitie_id',
-        'title',
+        'specialty_id',
+        // 'title',
         'bio',
     ];
 
     public function user(){
-        return $this->belongTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function conversation(){
         return $this->hasMany(Conversation::class);
+    }
+
+    public function specialty(){ 
+        return $this->belongsTo(Specialty::class);
     }
 }

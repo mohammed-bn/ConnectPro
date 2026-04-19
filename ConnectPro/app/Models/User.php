@@ -56,11 +56,11 @@ class User extends Authenticatable
     }
 
     public function client(){
-        return $this->hasMany(Client::class);
+        return $this->hasOne(Client::class);
     }
     
     public function professionnel(){
-        return $this->hasMany(professionnel::class);
+        return $this->hasOne(Professionnel::class);
     }
 
 }

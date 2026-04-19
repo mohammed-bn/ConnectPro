@@ -9,10 +9,10 @@ class Client extends Model
     protected $fillable = ['user_id'];
 
     public function user(){
-        return $tihs->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function conversation(){
-        return $this->hasMany(conversation::class);
+        return $this->hasMany(Conversation::class);
     }
 }
