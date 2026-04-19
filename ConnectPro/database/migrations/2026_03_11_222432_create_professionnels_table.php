@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('professionnels', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
-            $table->text('bio');
+            $table->string('category')->nullable();
+            $table->text('bio')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('spesialitie_id')->constrained('spesialities')->onDelete('cascade');
+            $table->foreignId('specialty_id')->constrained('specialties')->onDelete('cascade')->nullable();
             $table->timestamps();
         });
     }
