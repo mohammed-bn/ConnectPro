@@ -18,10 +18,15 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('photo')->nullable();
-            $table->string('phone',20)->nullable();
-            $table->integer('reputation')->default(0);
+            $table->string('phone', 20)->nullable();
+
+            // info de localisation 
+            $table->string('city', 100);      
+            $table->string('region', 100);    
+            $table->string('address', 255);   
+            
+            $table->integer('plaintes')->default(0);
             $table->enum('status', ['actif', 'banned'])->default('actif');
-            $table->foreignId('city_id')->nullable()->constrained('cities')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
