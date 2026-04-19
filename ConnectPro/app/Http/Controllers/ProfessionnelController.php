@@ -12,7 +12,7 @@ class ProfessionnelController extends Controller
      */
     public function index()
     {
-        return view(profil.professionel);
+        return view('profile.professionnel');
     }
 
     /**
@@ -31,6 +31,7 @@ class ProfessionnelController extends Controller
         $request->validate([
             'category' => 'required|string|max:255',
             'bio'      => 'required|string|max:550',
+            'specialty_id'  => 'required|specialties,id',
         ]);
 
         $user = User::create([

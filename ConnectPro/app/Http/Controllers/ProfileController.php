@@ -25,15 +25,15 @@ class ProfileController extends Controller
     {
         $request->validate([
             'photo' => 'nullable|image|max:2048',
-            'phone' => 'required|string|max:20',
-            'category' => 'required|string|max:100',
-            'speciality' => 'required|string|max:100',
-            'bio' => 'required|string|max:500',
+            'phone' => 'string|max:20',
+            'category' => 'string|max:100',
+            'speciality' => 'string|max:100',
+            'bio' => 'string|max:500',
         ]);
 
         $user = Auth::user();
 
-        // Upload photo
+        //photo
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('profiles', 'public');
             $user->photo = $path;
@@ -56,6 +56,9 @@ class ProfileController extends Controller
         return view('profile.update_pr_pro', compact('user'));
     }
 
+
+
+    
     public function update(Request $request)
     {
         $request->validate([
@@ -63,29 +66,42 @@ class ProfileController extends Controller
             'name' => 'max:255',
             'city' => 'string|max:70',
             'phone' => 'required|string|max:20',
+            'region'=> 'required|string|max:90',
+            'adress'=> 'string|max:90',
             'category' => 'required|string|max:100',
             'speciality' => 'required|string|max:100',
             'bio' => 'required|string|max:500',
         ]);
 
         $user = Auth::user();
-        $city = City::user();
         
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('profiles', 'public');
             $user->photo = $path;
         }
 
+        //information pour user 
         $user->phone = $request->phone;
-        $user->category = $request->category;
-        $user->speciality = $request->speciality;
-        $user->bio = $request->bio;
+        $user->city = $request->city;
+        $user->region = $request->region;
+        $user->name = $request->name;
+        $user->adress = $request->adress;
+
+        //information pour professionel
+            // $user->category = $request->category;
+            // $user->bio = $request->bio;
+
+        //information pour seciality
+            // $user->speciality = $request->speciality;
 
         $user->save();
 
-        dump($user);
-        dump($city);
+        // dump($user);
 
         return back()->with('success', 'Profil mis à jour !');
     }
+
+
+
+ 
 }

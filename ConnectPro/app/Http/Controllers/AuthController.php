@@ -16,6 +16,12 @@ class AuthController extends Controller
     {
         return view('dashboard.user');
     }
+    
+    //home page
+    public function hommePage()
+    {
+        return view('hommePage');
+    }
 
     //professionnel
     public function dashProfessionell()
@@ -30,6 +36,9 @@ class AuthController extends Controller
             'email'    => 'required|string|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role'     => 'required',
+            'city'     => 'nullable|string|max:100',
+            'region'   => 'nullable|string|max:100',
+            'address'  => 'nullable|string|max:255',
         ]);
 
     
@@ -37,6 +46,9 @@ class AuthController extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+             'city'     => $request->city,      
+            'region'   => $request->region,    
+            'address'  => $request->address,   
         ]);
 
 
@@ -44,9 +56,7 @@ class AuthController extends Controller
 
             Professionnel::create([
                 'user_id' => $user->id,
-                'category',
-                'spesialitie_id' => 1,
-                'bio',
+                'specialty_id' => 1
             ]);
 
             Auth::login($user);
@@ -71,7 +81,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard');
+            $user = Auth::user();
+
+            //********************************
+            if ($user->professionnel) {
+                return $this->dashProfessionell();
+            } 
+
+            //********************************
+
+            return $this->dashClient();
         }
 
         return back()->withErrors([
@@ -96,16 +115,4 @@ class AuthController extends Controller
         return back()->with('status', 'Lien de réinitialisation envoyé à votre adresse email.');
     }
 
-    public function compliteProfile(Request $request)
-    {
-        $user = Auth::user();
-
-        $validatedData = $request->validate([
-            'photo' => 'nullable|image|max:2048',
-            'phone' => 'required|string|max:20',
-        ]);
-        $completeProfile = $request->only('photo', 'phone');
-
-        return redirect()->route('dashboard')->with('success', 'Profil mis à jour !');
-    }
 }
