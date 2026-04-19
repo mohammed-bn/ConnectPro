@@ -24,7 +24,10 @@ class User extends Authenticatable
         'password',
         'photo',
         'phone',
-        'reputation',
+        'city',     
+        'region',    
+        'address',  
+        'plaintes',
         'status',
     ];
 
@@ -51,9 +54,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function city(){
-        return $this->belongsTo(City::class);
-    }
+
 
     public function client(){
         return $this->hasOne(Client::class);
