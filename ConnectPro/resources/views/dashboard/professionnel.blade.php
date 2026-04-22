@@ -28,16 +28,12 @@
         /* Hide scrollbar for sidebar but keep functionality */
         .sidebar-scroll {
             overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            height: calc(100vh - 180px);
         }
         .sidebar-scroll::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-        }
-
-        /* Dark mode transition */
-        * {
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: none;
         }
     </style>
 </head>
@@ -47,8 +43,8 @@
     <nav class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-50">
         <div class="flex items-center justify-between px-6 py-3">
             
-            <!-- Logo -->
-            <div class="flex items-center gap-3">
+            <!-- Logo cliquable - redirige vers la page d'accueil -->
+            <a href="{{ url('/') }}" class="flex items-center gap-3 transition-transform hover:scale-105">
                 <div class="w-10 h-10 bg-gradient-to-r from-[#0A2647] to-[#1E4A6D] rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -58,7 +54,7 @@
                     <h1 class="font-bold text-xl text-[#0A2647] dark:text-white">ConnectPro</h1>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Espace professionnel</p>
                 </div>
-            </div>
+            </a>
 
             <!-- Barre de recherche -->
             <div class="flex-1 max-w-md mx-6">
@@ -84,7 +80,7 @@
                 </button>
 
                 <!-- Profile -->
-                <a href="{{route('profile.profile')}}" class="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-[#FFB703] transition group">
+                <a href="{{route('profile')}}" class="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-[#FFB703] transition group">
                     <svg class="w-5 h-5 group-hover:text-[#FFB703]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
@@ -102,21 +98,16 @@
                 <!-- Séparateur -->
                 <div class="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
 
-                <!-- Notifications -->
-                <button onclick="toggleNotifications()" class="relative p-1.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-
-                <!-- Messages -->
-                <button onclick="toggleMessages()" class="relative p-1.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                    </svg>
-                    <span class="absolute top-0 right-0 w-2 h-2 bg-[#FFB703] rounded-full"></span>
-                </button>
+                <!-- Bouton Déconnexion -->
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="flex items-center gap-2 px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span class="text-sm font-medium">Déconnexion</span>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
@@ -143,74 +134,38 @@
         </div>
     </div>
 
-    <!-- Dropdown notifications globales -->
-    <div id="notificationsDropdownGlobal" class="fixed top-14 right-24 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl hidden z-50">
-        <div class="p-3 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="font-semibold text-gray-800 dark:text-white">Notifications</h3>
-        </div>
-        <div class="max-h-96 overflow-y-auto">
-            <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer">
-                <p class="text-sm text-gray-700 dark:text-gray-300">Nouvelle demande de consultation</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Il y a 5 minutes</p>
-            </div>
-            <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer">
-                <p class="text-sm text-gray-700 dark:text-gray-300">Votre publication a reçu un like</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Il y a 1 heure</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="messagesDropdownGlobal" class="fixed top-14 right-4 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl hidden z-50">
-        <div class="p-3 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="font-semibold text-gray-800 dark:text-white">Messages</h3>
-        </div>
-        <div class="max-h-96 overflow-y-auto">
-            <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer">
-                <div class="flex items-center gap-3">
-                    <img src="https://ui-avatars.com/api/?name=Client+Martin&background=FFB703&color=0A2647&size=40" class="w-10 h-10 rounded-full">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800 dark:text-white">Client Martin</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Bonjour, je suis intéressé...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="flex pt-16">
         
-        <!-- ==================== SIDEBAR GAUCHE (SCROLLABLE HIDDEN) ==================== -->
-        <aside class="fixed left-0 top-16 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl z-30 transform transition-transform duration-300 flex flex-col">
-
-            <!-- SCROLLABLE CONTENT (Hidden scrollbar) -->
-            <div class="flex-1 sidebar-scroll">
-                
-                <!-- PROFIL UTILISATEUR - DESIGN HORIZONTAL -->
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center gap-4">
-                        <!-- Photo de profil -->
-                        <div class="relative">
-                            <img src="https://ui-avatars.com/api/?name=Jean+Dupont&background=0A2647&color=FFB703&size=100"
-                                 alt="Photo de profil"
-                                 class="w-16 h-16 rounded-full object-cover border-4 border-[#FFB703] shadow-lg">
-                            <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
-                        </div>
-                        
-                        <!-- Infos profil à côté de la photo -->
-                        <div class="flex-1">
-                            <h2 class="font-bold text-lg text-[#0A2647] dark:text-white">Jean Dupont</h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Professionnel</p>
-                            <a href="{{ route('profile.edit') }}" class="inline-flex items-center gap-1 mt-1 text-xs text-[#FFB703] hover:text-[#E5A500] transition">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                </svg>
-                                Modifier
-                            </a>
-                        </div>
+        <!-- ==================== SIDEBAR GAUCHE CORRIGÉE ==================== -->
+        <aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-72 bg-white dark:bg-gray-800 shadow-2xl z-30 flex flex-col">
+            
+            <!-- PROFIL UTILISATEUR -->
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center gap-4">
+                    <!-- Photo de profil -->
+                    <div class="relative">
+                        <img src="https://ui-avatars.com/api/?name=Jean+Dupont&background=0A2647&color=FFB703&size=100"
+                             alt="Photo de profil"
+                             class="w-16 h-16 rounded-full object-cover border-4 border-[#FFB703] shadow-lg">
+                        <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    
+                    <!-- Infos profil -->
+                    <div class="flex-1">
+                        <h2 class="font-bold text-lg text-[#0A2647] dark:text-white">Jean Dupont</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Professionnel</p>
+                        <a href="{{ route('profile.edit') }}" class="inline-flex items-center gap-1 mt-1 text-xs text-[#FFB703] hover:text-[#E5A500] transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                            </svg>
+                            Modifier
+                        </a>
                     </div>
                 </div>
+            </div>
 
-                <!-- MENU DE NAVIGATION -->
+            <!-- MENU DE NAVIGATION SCROLLABLE -->
+            <div class="flex-1 sidebar-scroll">
                 <nav class="p-4">
                     <div class="space-y-1">
                         <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition group">
@@ -230,25 +185,15 @@
                 </nav>
             </div>
 
-            <!-- PIED DE PAGE SIDEBAR (Paramètres + Déconnexion) - FIXED -->
-            <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-                <div class="space-y-1">
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition group">
-                        <svg class="w-5 h-5 group-hover:text-[#FFB703]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                        <span>Paramètres</span>
-                    </a>
-                    <form method="POST" action="#" class="w-full">
-                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition group">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                            </svg>
-                            <span>Déconnexion</span>
-                        </button>
-                    </form>
-                </div>
+            <!-- PIED DE PAGE SIDEBAR (Paramètres) -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition group">
+                    <svg class="w-5 h-5 group-hover:text-[#FFB703]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span>Paramètres</span>
+                </a>
             </div>
         </aside>
 
@@ -269,17 +214,17 @@
                     <form id="postForm" method="POST" action="#" enctype="multipart/form-data">
                         <textarea name="content" id="postContent" rows="2"
                                   placeholder="Partagez une idée, un service, une actualité..."
-                                  class="w-full p-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none transition resize-none text-sm"></textarea>
+                                  class="w-full p-2.5 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-xl focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none transition resize-none text-sm"></textarea>
                         <div class="flex flex-wrap items-center justify-between gap-2 mt-2">
                             <div class="flex items-center gap-2">
-                                <label for="postImage" class="cursor-pointer px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300">
-                                    <svg class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <label for="postImage" class="cursor-pointer px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-1.5 text-xs">
+                                    <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
                                     <span>Image</span>
                                 </label>
                                 <input type="file" name="image" id="postImage" accept="image/*" class="hidden">
-                                <span id="fileName" class="text-xs text-gray-500 dark:text-gray-400"></span>
+                                <span id="fileName" class="text-xs text-gray-500"></span>
                             </div>
                             <button type="submit"
                                     class="px-4 py-1 bg-gradient-to-r from-[#0A2647] to-[#1E4A6D] hover:from-[#1E4A6D] hover:to-[#2C7DA0] text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md flex items-center gap-1.5 text-xs">
@@ -308,10 +253,10 @@
                                          class="w-10 h-10 rounded-full object-cover">
                                     <div>
                                         <h3 class="font-bold text-sm text-gray-800 dark:text-white">Dr. Thomas Bernard</h3>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Cardiologue • 2 heures</p>
+                                        <p class="text-xs text-gray-500">Cardiologue • 2 heures</p>
                                     </div>
                                 </div>
-                                <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                <button class="text-gray-400 hover:text-gray-600">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                                     </svg>
@@ -323,13 +268,13 @@
                             <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop" 
                                  class="w-full h-48 object-cover rounded-lg mb-3">
                             <div class="flex items-center gap-5">
-                                <button class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-red-500 transition text-sm">
+                                <button class="flex items-center gap-1.5 text-gray-500 hover:text-red-500 transition text-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                     </svg>
                                     <span>24 likes</span>
                                 </button>
-                                <button class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-[#FFB703] transition text-sm">
+                                <button class="flex items-center gap-1.5 text-gray-500 hover:text-[#FFB703] transition text-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                                     </svg>
@@ -348,10 +293,10 @@
                                          class="w-10 h-10 rounded-full object-cover">
                                     <div>
                                         <h3 class="font-bold text-sm text-gray-800 dark:text-white">Marie Martin</h3>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Avocate • 5 heures</p>
+                                        <p class="text-xs text-gray-500">Avocate • 5 heures</p>
                                     </div>
                                 </div>
-                                <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                <button class="text-gray-400 hover:text-gray-600">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                                     </svg>
@@ -361,13 +306,13 @@
                                 Consultation juridique gratuite cette semaine pour les nouveaux clients. Contactez-moi pour plus d'informations !
                             </p>
                             <div class="flex items-center gap-5">
-                                <button class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-red-500 transition text-sm">
+                                <button class="flex items-center gap-1.5 text-gray-500 hover:text-red-500 transition text-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                     </svg>
                                     <span>56 likes</span>
                                 </button>
-                                <button class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-[#FFB703] transition text-sm">
+                                <button class="flex items-center gap-1.5 text-gray-500 hover:text-[#FFB703] transition text-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                                     </svg>
@@ -387,7 +332,44 @@
         const darkModeToggle = document.getElementById('darkModeToggle');
         const darkModeIcon = document.getElementById('darkModeIcon');
         
-        // Check for saved dark mode preference
         if (localStorage.getItem('darkMode') === 'true') {
             document.documentElement.classList.add('dark');
-            darkModeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 
+            darkModeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+        } else {
+            darkModeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+        }
+        
+        darkModeToggle.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+                darkModeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+                darkModeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+            }
+        });
+        
+        function closeNotification() {
+            const toast = document.getElementById('notificationToast');
+            if (toast) toast.classList.add('hidden');
+        }
+        
+        // Afficher le nom du fichier sélectionné
+        const fileInput = document.getElementById('postImage');
+        const fileNameSpan = document.getElementById('fileName');
+        
+        if (fileInput && fileNameSpan) {
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    fileNameSpan.textContent = this.files[0].name;
+                } else {
+                    fileNameSpan.textContent = '';
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
