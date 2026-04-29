@@ -11,6 +11,8 @@ class DemandeConsultation extends Model
         'subject',
         'message',
         'status',
+        'client_id',        
+        'professionnel_id'
     ];
 
     public function client(){
