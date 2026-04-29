@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Conversation extends Model
 {
+
+    protected $fillable = [
+        'client_id',        
+        'professionnel_id'
+    ];
     public function professionnel(){
         return $this->belongsTo(Professionnel::class);
     }
