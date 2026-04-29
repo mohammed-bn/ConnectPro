@@ -2,14 +2,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Speciality;
 
 class Professionnel extends Model
 {
     protected $fillable = [
         'user_id',
         'category',
-        'specialty_id',
-        // 'title',
+        'speciality_id',
         'bio',
     ];
 
@@ -22,6 +22,6 @@ class Professionnel extends Model
     }
 
     public function specialty(){ 
-        return $this->belongsTo(Specialty::class);
+        return $this->belongsTo(Speciality::class);
     }
 }
