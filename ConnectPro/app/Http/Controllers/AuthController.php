@@ -7,27 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Client;
 use App\Models\Professionnel;
+use App\Models\Admin;
+use App\Models\Post;
 
 class AuthController extends Controller
 {
-
-    //client
-    public function dashClient()
-    {
-        return view('dashboard.user');
-    }
-    
-    //home page
-    public function hommePage()
-    {
-        return view('hommePage');
-    }
-
-    //professionnel
-    public function dashProfessionell()
-    {
-        return view('dashboard.professionnel');
-    }
 
     public function register(Request $request)
     {
@@ -46,32 +30,32 @@ class AuthController extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
-             'city'     => $request->city,      
+            'city'     => $request->city,      
             'region'   => $request->region,    
             'address'  => $request->address,   
         ]);
 
 
         if ($request->role === 'professional') {
-
+               session(['role' => 'professional']);
             Professionnel::create([
                 'user_id' => $user->id,
-                'specialty_id' => 1
+                'speciality_id' => 1
             ]);
 
             Auth::login($user);
 
-            return $this->dashProfessionell();
+            return redirect()->route('professionnel.dashboard');
 
-        } else {
-
+        }else {
+            session(['role' => 'client']);
             Client::create([
                 'user_id' => $user->id
             ]);
 
             Auth::login($user);
 
-            return $this->dashClient();
+            return redirect()->route('client.dashboard');
         }
     }
 
@@ -79,18 +63,32 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials) ) {
             $request->session()->regenerate();
             $user = Auth::user();
 
+            if ($user->status === 'banned') {
+            Auth::logout(); 
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return back()->withErrors([
+                'email' => 'Votre compte a été bloqué. Veuillez contacter l\'administrateur.',
+            ]);
+            }
+            
             //********************************
             if ($user->professionnel) {
-                return $this->dashProfessionell();
-            } 
-
+                return redirect()->route('professionnel.dashboard');
+            }
+            elseif ($user->client && $user->admin){
+                return redirect()->route('admin.dashboard');
+            }
+            elseif($user->client){
+                return redirect()->route('client.dashboard');
+            }
             //********************************
-
-            return $this->dashClient();
+            
         }
 
         return back()->withErrors([
