@@ -52,7 +52,8 @@ class SearchController extends Controller
     
         $results = $professionnels->map(function($professionnel) {
             return [
-                'id' => $professionnel->id,
+                'id' => $professionnel->user_id,    
+                'professionnel_id' => $professionnel->id,
                 'email' => $professionnel->user->email,      
                 'name' => $professionnel->user->name,        
                 'photo' => $professionnel->user->photo,      
