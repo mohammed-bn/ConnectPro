@@ -8,15 +8,11 @@ class Conversation extends Model
 {
 
     protected $fillable = [
-        'client_id',        
-        'professionnel_id'
+        'demande_consultations_id'
     ];
-    public function professionnel(){
-        return $this->belongsTo(Professionnel::class);
-    }
 
-    public function client(){
-        return $this->belongsTo(Client::class);
+    public function demandeConsultation(){
+        return $this->belongsTo(DemandeConsultation::class);
     }
 
     public function messages(){

@@ -17,11 +17,11 @@ class Professionnel extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function conversation(){
-        return $this->hasMany(Conversation::class);
+    public function demandeConsultation(){
+        return $this->hasMany(DemandeConsultation::class);
     }
 
     public function specialty(){ 
-        return $this->belongsTo(Speciality::class);
+        return $this->belongsTo(Speciality::class, 'speciality_id');
     }
 }

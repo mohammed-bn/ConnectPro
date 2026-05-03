@@ -22,4 +22,8 @@ class DemandeConsultation extends Model
     public function professionnel(){
         return $this->belongsTo(Professionnel::class);
     }
+
+    public function conversation(){
+        return $this->hasOne(Conversation::class);
+    }
 }

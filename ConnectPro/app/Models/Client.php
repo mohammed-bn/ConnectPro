@@ -12,7 +12,7 @@ class Client extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function conversation(){
-        return $this->hasMany(Conversation::class);
+    public function demandeConsultation(){
+        return $this->hasMany(DemandeConsultation::class);
     }
 }
