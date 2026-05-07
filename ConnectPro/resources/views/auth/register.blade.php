@@ -123,7 +123,7 @@
                         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Rejoignez gratuitement la communauté</p>
                     </div>
 
-                    <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                    <form method="POST" action="{{route('register')}}" class="space-y-4">
                         @csrf
 
                         <!-- NOM COMPLET -->

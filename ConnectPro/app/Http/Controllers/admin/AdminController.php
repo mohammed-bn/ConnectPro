@@ -118,8 +118,6 @@ class AdminController extends Controller
         )); 
     }
 
-
-
     //calcule procentage de postes pour professionnel et 
     public function calculePercentagePost($total, $professionnelCount, $clientCount)
     {
@@ -171,4 +169,22 @@ class AdminController extends Controller
         ];
     }
 
+    public function changerStatus($id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->status === 'actif') {
+            $user->status = 'banned';
+            $message = "User banned";
+        } else {
+            $user->status = 'actif';
+            $message = "User activated";
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => $message
+        ]);
+    }
 }

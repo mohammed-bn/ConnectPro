@@ -99,7 +99,6 @@
     </div>
 </nav>
 
-
 <!-- CONTENT -->
 <main class="min-h-screen">
     @yield('content')

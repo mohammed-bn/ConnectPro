@@ -47,9 +47,6 @@ class PostController extends Controller
     }
  
     
-
-
-    
     public function userPosts($userId)
     {
         $user = User::findOrFail($userId);
@@ -74,7 +71,7 @@ class PostController extends Controller
                     ->latest()
                     ->paginate(10);
 
-        return view('utilisateur.profil', compact('posts'));
+        return view('utilisateur.profile', compact('posts'));
     }
  
 }

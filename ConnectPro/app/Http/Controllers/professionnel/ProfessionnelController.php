@@ -4,28 +4,22 @@ namespace App\Http\Controllers\professionnel;
 
 use App\Models\Professionnel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User; 
+use App\Models\Post;
+use App\Http\Controllers\Controller;
 
 class ProfessionnelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function dashProfessionell()
     {
-        return view('dashboard.professionnel');
+        $posts = Post::with(['user', 'comments.user'])
+                 ->latest()
+                 ->paginate(10);
+        return view('professionnel.dashboard', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view("hena");
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, $userId)
     {
         $request->validate([
@@ -41,35 +35,34 @@ class ProfessionnelController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Professionnel $professionnel)
+    public function show($id)
     {
-        //
+        $user = User::with(['professionnel.specialty'])->findOrFail($id);
+        
+        $posts = Post::with(['user', 'comments.user'])
+                    ->where('user_id', $id)
+                    ->latest()
+                    ->paginate(10);
+        
+        $totalPost = $posts->total();
+        
+        $consultationsCount = 0;
+        
+        $existingRequest = null;
+        
+
+        $isClient = Auth::check() && !Auth::user()->professionnel;
+        
+    
+        return view('voirProfile', compact(
+            'user',         
+            'posts',        
+            'totalPost',
+            'consultationsCount',
+            'isClient',
+            'existingRequest'
+        ));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Professionnel $professionnel)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Professionnel $professionnel)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Professionnel $professionnel)
-    {
-        //
-    }
 }

@@ -10,9 +10,22 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DemandeConsultationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 
 Route::get('/', function () {
+    $user = auth()->user();
+    if($user) {
+         if ($user->professionnel) {
+                return redirect()->route('professionnel.dashboard');
+            }
+            elseif ($user->client && $user->admin){
+                return redirect()->route('admin.dashboard');
+            }
+            elseif($user->client){
+                return redirect()->route('client.dashboard');
+            }
+    }
     return view('welcome');
 })->name('welcome');
 
@@ -56,20 +69,24 @@ Route::middleware('auth')->group(function () {
         Route::post('/send/consultation/{professionalId}', [DemandeConsultationController::class, 'sendRequest'])->name('sendConsultation');
         Route::get('/client/profile/edit', [profileControleurUt::class, 'edit'])->name('profileUt.edit');
         Route::put('/client/profile/Update', [profileControleurUt::class, 'update'])->name('profileUt.update');
+        Route::get('/demandes-consultation', [DemandeConsultationController::class, 'mesDemandeconsultation'])->name('demandes.index');
     });
 
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'dachboardAdmin'])->name('admin.dashboard');
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::post('/admin/user/{id}/changer-status', [AdminController::class, 'changerStatus'])->name('admin.changer.status');
 
     });
     
     //recherche route
     Route::get('/search/professionals', [SearchController::class, 'searchProfessionals'])->name('search.professionals');
 
-    Route::get('/voir/profile', function () {
-        return view('voirProfile');
-    })->name('profilee.professionals');
+    // Route::get('/voir/profile', function () {
+    //     return view('voirProfile');
+    // })->name('profilee.professionals');
+
+    Route::get('/professional/{id}', [ProfessionnelController::class, 'show'])->name('professional.show');
 
     //publication route
     Route::post('/ajouter/publication', [PostController::class, 'store'])->name('addPost');
@@ -78,4 +95,7 @@ Route::middleware('auth')->group(function () {
    //notification rout
     Route::get('/notification', [DemandeConsultationController::class, 'Notification'])->name('notification');
     
+    //creation de comment
+    Route::post('/comment/create/{post}', [CommentController::class, 'creatComent'])->name('comment.create');
+    Route::delete('/post/{id}', [PostController::class, 'destroyPost'])->name('post.destroy');
 });

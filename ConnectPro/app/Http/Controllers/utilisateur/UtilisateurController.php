@@ -4,64 +4,27 @@ namespace App\Http\Controllers\utilisateur;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller; 
+use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
+use App\Models\Comment;
+use App\models\DemandeConsultation;
 
 class UtilisateurController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    //client
+    public function dashClient()
     {
-        return view('dashboard.user');
+        $posts = Post::with(['user', 'comments.user'])
+                 ->latest()
+                 ->paginate(10);
+        $totalPosts = Post::where('user_id', Auth::id())->count();
+        $toalDemendconsult = DemandeConsultation::where('professionnel_id',Auth::id())->count();
+        return view('utilisateur.dashboard',compact('posts', 'totalPosts', 'toalDemendconsult'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view("");
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request, $userId)
-    {
-        $user = User::create([
-            'user_id' => $userId,
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Professionnel $professionnel)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Professionnel $professionnel)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Professionnel $professionnel)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Professionnel $professionnel)
-    {
-        //
-    }
-}
+   }

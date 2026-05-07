@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard Client - ConnectPro</title>
+    <title>Dashboard Professionnel - ConnectPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -112,11 +112,114 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+        
+        .toast-notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
     
-    @include('utilisateur._header')
+    <!-- HEADER / NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-50 transition-colors">
+        <div class="flex items-center justify-between px-6 py-3">
+            
+            <a href="{{ url('/') }}" class="flex items-center gap-3 transition-transform hover:scale-105">
+                <div class="w-10 h-10 bg-gradient-to-r from-[#0A2647] to-[#1E4A6D] rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-xl text-[#0A2647] dark:text-white">ConnectPro</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Espace professionnel</p>
+                </div>
+            </a>
+
+            <div class="flex-1 max-w-2xl mx-6">
+                <div class="flex items-center gap-2">
+                    <div class="relative flex-1">
+                        <input type="text" 
+                               id="quickSearch"
+                               placeholder="Recherche rapide..." 
+                               class="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none transition text-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <button onclick="toggleFilterBar()" id="filterToggleBtn" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:shadow-md hover:border-[#FFB703] dark:hover:border-[#FFB703] transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                        </svg>
+                        <span>Filtres</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition theme-transition">
+                    <svg id="darkModeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+                
+                <a href="{{route('profilePr')}}" class="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-[#FFB703] transition group">
+                    <svg class="w-5 h-5 group-hover:text-[#FFB703]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span class="text-sm font-medium">{{ Auth::user()->name ?? 'Profil' }}</span>
+                </a>
+
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+
+                <form method="POST" action="{{route('logout')}}" class="inline">
+                    @csrf
+                    <button type="submit" class="flex items-center gap-2 px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span class="text-sm font-medium">Déconnexion</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="notificationToast" class="fixed top-20 right-4 z-50 hidden transform transition-all duration-300 toast-notification">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 max-w-sm border-l-4 border-[#FFB703]">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 bg-[#FFB703]/20 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#FFB703]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-800 dark:text-white">Notification</h4>
+                    <p id="notificationMessage" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                </div>
+                <button onclick="closeNotification()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="flex pt-16">
         
@@ -126,14 +229,14 @@
             <div class="p-5 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex flex-col items-center text-center">
                     <div class="relative">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Jean Dupont') }}&background=0A2647&color=FFB703&size=100"
+                        <img src="{{ Auth::user()->photo ? asset('storage/'.Auth::user()->photo) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name ?? 'Jean Dupont').'&background=0A2647&color=FFB703&size=100' }}"
                              class="w-20 h-20 rounded-full object-cover border-4 border-[#FFB703] shadow-lg">
                         <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
                     <h3 class="mt-3 font-bold text-[#0A2647] dark:text-white">{{ Auth::user()->name ?? 'Jean Dupont' }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Client</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Professionnel</p>
                     
-                    <a href="{{ route('profileUt.edit') }}" class="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#0A2647] dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                    <a href="{{ route('profilePrEdit') }}" class="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#0A2647] dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                         </svg>
@@ -152,20 +255,20 @@
                         <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
                     </a>
 
-                    <a href="{{route('demandes.index')}}" class="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition group">
+                    <a href="{{route('notification')}}" class="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition group">
                         <svg class="w-5 h-5 group-hover:text-[#FFB703]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                         </svg>
                         <span class="text-sm font-medium">Notifications</span>
-                        <span class="ml-auto bg-[#FFB703] text-[#0A2647] text-xs px-2 py-0.5 rounded-full">{{$toalDemendconsult}}</span>
+                        <span class="ml-auto bg-[#FFB703] text-[#0A2647] text-xs px-2 py-0.5 rounded-full">2</span>
                     </a>
 
-                    <a href="{{route('profileUser')}}" class="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-xl text-[#0A2647] dark:text-white">
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-xl text-[#0A2647] dark:text-white">
                         <svg class="w-5 h-5 text-[#FFB703]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                         </svg>
                         <span class="text-sm font-medium">Publications</span>
-                        <span class="ml-auto bg-[#FFB703] text-[#0A2647] text-xs px-2 py-0.5 rounded-full">{{$totalPosts}}</span>
+                        <span class="ml-auto bg-[#FFB703] text-[#0A2647] text-xs px-2 py-0.5 rounded-full">{{ $posts->total() }}</span>
                     </a>
                     
                 </nav>
@@ -189,7 +292,7 @@
                 <!-- FILTER BAR -->
                 <div id="filterBar" class="filter-bar-hidden bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 mb-4">
                     <div class="px-4 py-2">
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Nom</label>
                                 <input type="text" id="filterNom" placeholder="Nom du professionnel" class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none">
@@ -205,10 +308,6 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Ville</label>
                                 <input type="text" id="filterVille" placeholder="Ville" class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Région</label>
-                                <input type="text" id="filterRegion" placeholder="Région" class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none">
                             </div>
                         </div>
                         <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
@@ -243,9 +342,9 @@
                         </div>
                     </div>
                     <div class="p-4">
-                        <form method="POST" action="{{Route('addPost')}}" enctype="multipart/form-data">
+                        <form id="postForm" method="POST" action="{{ route('addPost') }}" enctype="multipart/form-data">
                             @csrf
-                            <textarea name="description" rows="3"
+                            <textarea name="description" id="postContent" rows="3"
                                       placeholder="Partagez une idée, un service, une actualité..."
                                       class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl focus:ring-2 focus:ring-[#FFB703] focus:border-transparent outline-none transition resize-none text-sm">{{ old('description') }}</textarea>
                             
@@ -310,7 +409,7 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- BOUTON VOIR PROFIL DANS LES PUBLICATIONS (CORRIGÉ) -->
+                                    <!-- BOUTON VOIR PROFIL -->
                                     <div class="flex items-center gap-2">
                                         <a href="{{ route('professional.show', $post->user->id) }}" 
                                            class="flex items-center gap-1.5 px-3 py-1.5 bg-[#FFB703] text-[#0A2647] text-xs font-semibold rounded-lg hover:bg-[#E5A500] transition-all duration-300 shadow-md">
@@ -321,7 +420,7 @@
                                             Voir profil
                                         </a>
                                         
-                                        @if(Auth::id() === $post->user_id || (Auth::user()->admin ?? false))
+                                        @if(Auth::id() === $post->user_id)
                                         <form method="POST" action="#" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?')">
                                             @csrf
                                             @method('DELETE')
@@ -349,17 +448,20 @@
                                 </div>
                                 @endif
 
-                                <!-- COMMENTAIRES -->
-                                <div class="mt-4">
+                                <!-- LIKES ET COMMENTAIRES -->
+                                <div class="flex items-center gap-5 mb-3">
                                     <button onclick="toggleComments({{ $post->id }})" 
-                                            class="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-[#FFB703] transition text-sm mb-3">
+                                            class="flex items-center gap-1.5 text-gray-500 hover:text-[#FFB703] transition text-sm">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                                         </svg>
                                         <span>{{ $post->comments->count() }} commentaire(s)</span>
                                     </button>
-                                    
-                                    <div id="comments-{{ $post->id }}" class="hidden space-y-3 mt-3">
+                                </div>
+
+                                <!-- COMMENTAIRES -->
+                                <div id="comments-{{ $post->id }}" class="hidden space-y-3 mt-3">
+                                    <div class="space-y-3 max-h-40 overflow-y-auto">
                                         @forelse($post->comments as $comment)
                                         <div class="flex items-start gap-3 text-sm">
                                             <img src="https://ui-avatars.com/api/?name={{ $comment->user->name }}&background=0A2647&color=FFB703&size=28" 
@@ -448,6 +550,22 @@
             }
         });
         
+        // Notification Functions
+        function closeNotification() {
+            const toast = document.getElementById('notificationToast');
+            if (toast) toast.classList.add('hidden');
+        }
+        
+        function showNotification(message, type = 'success') {
+            const toast = document.getElementById('notificationToast');
+            const msgSpan = document.getElementById('notificationMessage');
+            msgSpan.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+        
         // Functions
         function escapeHtml(text) {
             if(!text) return '';
@@ -456,9 +574,6 @@
             return div.innerHTML;
         }
         
-        // ============================================
-        // FONCTION POUR REDIRIGER VERS LE PROFIL (CORRIGÉE)
-        // ============================================
         function viewProfessional(professionalId) {
             if(professionalId) {
                 window.location.href = '/professional/' + professionalId;
@@ -471,12 +586,14 @@
             modalImage.src = imageUrl;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
         
         function closeImageModal() {
             const modal = document.getElementById('imageModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            document.body.style.overflow = '';
         }
         
         function toggleComments(postId) {
@@ -488,16 +605,17 @@
             }
         }
         
+        
         $.ajaxSetup({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
 
+        // Apply Filters Function
         function applyFilters() {
             let nom = document.getElementById('filterNom')?.value.trim() || '';
             let categorie = document.getElementById('filterCategorie')?.value.trim() || '';
             let specialite = document.getElementById('filterSpecialite')?.value.trim() || '';
             let ville = document.getElementById('filterVille')?.value.trim() || '';
-            let region = document.getElementById('filterRegion')?.value.trim() || '';
             
             let resultsContainer = document.getElementById("professionalsResults");
             
@@ -512,8 +630,7 @@
                     nom: nom,
                     categorie: categorie,
                     specialite: specialite,
-                    ville: ville,
-                    region: region
+                    ville: ville
                 },
                 success: function(professionals) {
                     if(resultsContainer) {
@@ -529,14 +646,13 @@
                                     <div class="p-4">
                                         <div class="flex items-center justify-between mb-3">
                                             <div class="flex items-center gap-3">
-                                                <img src="${pro.photo  || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(pro.name) + '&background=0A2647&color=FFB703&size=40'}" 
+                                                <img src="${pro.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(pro.name) + '&background=0A2647&color=FFB703&size=40'}" 
                                                      class="w-10 h-10 rounded-full object-cover">
                                                 <div>
                                                     <h3 class="font-bold text-sm text-gray-800 dark:text-white">${escapeHtml(pro.name)}</h3>
                                                     <p class="text-xs text-gray-500">${pro.category || 'Professionnel'} • ${pro.city || 'Ville inconnue'}</p>
                                                 </div>
                                             </div>
-                                            <!-- BOUTON VOIR PROFIL DANS LES RÉSULTATS DE RECHERCHE (CORRIGÉ) -->
                                             <button onclick="viewProfessional(${pro.id})" 
                                                     class="text-xs bg-[#FFB703] text-[#0A2647] px-3 py-1 rounded-full hover:bg-[#E5A500] transition">
                                                 Voir profil
@@ -611,6 +727,37 @@
             });
         }
         
+        // Post Form AJAX Submission
+        const postForm = document.getElementById('postForm');
+        if (postForm) {
+            postForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                $.ajax({
+                    url: this.action,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            showNotification('Publication ajoutée avec succès !');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            showNotification('Erreur: ' + response.message, 'error');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error:', xhr);
+                        showNotification('Erreur lors de l\'ajout de la publication', 'error');
+                    }
+                });
+            });
+        }
+ 
         // Quick search
         const quickSearch = document.getElementById('quickSearch');
         if(quickSearch) {

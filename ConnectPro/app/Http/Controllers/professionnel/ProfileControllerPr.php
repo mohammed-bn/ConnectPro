@@ -5,24 +5,32 @@ namespace App\Http\Controllers\professionnel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller; 
 use Illuminate\Support\Facades\Auth;
-use App\Models\City;
 use App\Models\Professionnel;
 use App\Models\Speciality;
+use App\Models\Post;
+use App\Models\Comment;
 
 
-class ProfileController extends Controller
+class ProfileControllerPr extends Controller
 {
 
     public function index()
     {
         $user = Auth::user();
-        return view('profile.profileProfessionnel', compact('user'));
+        $totalPosts = $user->posts()->count();
+        $posts = Post::with(['user', 'comments.user'])
+            ->where('user_id', $user->id)
+            ->latest()
+            ->paginate(10);
+        
+        return view('professionnel.profile', compact(
+            'user',
+            'posts',
+            'totalPosts'
+        ));
+        // return dd($user,'tesst');
     }
 
-
-    /**
-     * Enregistrer les infos du profil
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -42,70 +50,66 @@ class ProfileController extends Controller
         }
 
         $user->phone = $request->phone;
-        $user->category = $request->category;
         $user->speciality = $request->speciality;
         $user->bio = $request->bio;
 
         $user->save();
 
-        return redirect()->route('dashboard')
+        return redirect()->route('professionnel.dashboard')
             ->with('success', 'Profil professionnel complété !');
     }
 
     public function edit()
     {
         $user = Auth::user();
-        return view('updateProfile.update_pr_pro', compact('user'));
+        return view('professionnel.updateProfile', compact('user'));
     }
-
-
-
 
     public function update(Request $request)
     {
         $request->validate([
             'photo' => 'nullable|image|max:2048',
-            'name' => 'max:255',
-            'city' => 'string|max:70',
-            'phone' => 'required|string|max:20',
-            'region'=> 'required|string|max:90',
-            'adress'=> 'string|max:90',
-            'category' => 'required|string|max:100',
-            'bio' => 'required|string|max:500',
-            'speciality' => 'string|max:100',
+            'name' => 'nullable|max:255',
+            'city' => 'nullable|string|max:70',
+            'phone' => 'nullable|string|max:20',
+            'region' => 'nullable|string|max:90',
+            'address' => 'nullable|string|max:90',
+            'category' => 'nullable|string|max:100',
+            'speciality' => 'nullable|string|max:100',
+            'bio' => 'nullable|string|max:500',
         ]);
 
         $user = Auth::user();
         $pro = $user->professionnel;
-        
+
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('profiles', 'public');
             $user->photo = $path;
         }
 
-        //information pour user 
+        $user->name = $request->name;
         $user->phone = $request->phone;
         $user->city = $request->city;
         $user->region = $request->region;
-        $user->name = $request->name;
         $user->address = $request->address;
-
-        // information pour professionel
         $pro->category = $request->category;
+        if ($request->speciality) {
+            $speciality = Speciality::firstOrCreate(['title' => $request->speciality]);
+            $pro->speciality_id = $speciality->id;
+        }
         $pro->bio = $request->bio;
-
-        // //information pour seciality
-        // $speciality = Speciality::updateOrCreate(
-        //     ['title' => $request->speciality],
-        //     ['title' => $request->speciality]
-        // );
-        // $pro->spesialitie_id = $request->speciality;
-        
 
         $user->save();
         $pro->save();
-        // dump($user);
 
-        return back()->with('success', 'Profil mis à jour !');
-    } 
+        return back()->with('success', 'Profil mis à jour avec succès !');
+    }
+
+    public function voirProfile($id)
+    {
+        $professionnel = Professionnel::with('user', 'specialty')
+            ->findOrFail($id);
+
+        return view('voirProfile', compact('professionnel'));
+    }
 }

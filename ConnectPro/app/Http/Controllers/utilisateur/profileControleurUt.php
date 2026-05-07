@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller; 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Client;
-
+use App\Models\Post;
+use App\Models\Comment;
 
 
 class profileControleurUt extends Controller
@@ -14,14 +15,22 @@ class profileControleurUt extends Controller
 
     public function index()
     {
+        // dd('test');
+        // exit();
         $user = Auth::user();
-        return view('Utilisateur.profile', compact('user'));
+        $totalPosts = $user->posts()->count();
+        $posts = Post::with(['user', 'comments.user'])
+            ->where('user_id', $user->id)
+            ->latest()
+            ->paginate(10);
+        // return dd($user,$posts,$totalPosts);
+        return view('utilisateur.profile', compact(
+            'user',
+            'posts',
+            'totalPosts'
+        ));
     }
 
-
-    /**
-     * Enregistrer les infos du profil
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -59,7 +68,6 @@ class profileControleurUt extends Controller
         return view('utilisateur.updateProfile', compact('user'));
     }
 
-
     public function update(Request $request)
     {
         $request->validate([
@@ -92,4 +100,5 @@ class profileControleurUt extends Controller
   
         return back()->with('success', 'Profil mis à jour !');
     } 
+    
 }

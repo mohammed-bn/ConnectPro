@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         if ($request->role === 'professional') {
                session(['role' => 'professional']);
-            Professionnel::create([
+                Professionnel::create([
                 'user_id' => $user->id,
                 'speciality_id' => 1
             ]);
